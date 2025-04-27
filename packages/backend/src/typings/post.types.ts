@@ -4,6 +4,7 @@ type UserPostType = {
   picture: string;
 };
 export type PostReturnType = {
+  id: string,
   content: string;
   likes: number;
   user: UserPostType;
