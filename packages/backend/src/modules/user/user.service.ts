@@ -1,30 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { UserReturnType, UserReturnWithPasswordType } from './../../typings/';
 import { CreateUserDto } from './dto/create-user.dto';
+import { prismaUserOmit } from 'src/shared/constants';
+import { hash } from 'argon2';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prismaService: PrismaService
-  ) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
-  public async create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  public async create(createUserDto: CreateUserDto): Promise<UserReturnType> {
+    const hashedPassword = await hash(createUserDto.password);
+
+    return this.prismaService.user.create({
+      data: { ...createUserDto, password: hashedPassword },
+      omit: prismaUserOmit,
+    });
   }
 
-  public async findAll() {
-    return `This action returns all user`;
-  }
-
-  public async findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  public async update(id: number, updateUserDto: any) {
-    return `This action updates a #${id} user`;
-  }
-
-  public async remove(id: number) {
-    return `This action removes a #${id} user`;
+  public async findByEmail(email: string): Promise<UserReturnWithPasswordType> {
+    return this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+      omit: {
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 }
