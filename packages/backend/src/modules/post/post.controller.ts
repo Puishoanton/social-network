@@ -7,7 +7,7 @@ import { PostService } from './post.service';
 
 @Controller(POST_ROUTE_KEYS.MAIN)
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(private readonly postService: PostService) { }
 
   @Auth()
   @Post(POST_ROUTE_KEYS.CREATE)
@@ -36,5 +36,12 @@ export class PostController {
     @User() user: UserReturnType,
   ) {
     return this.postService.likePost(postId, user.id);
+  }
+
+  @Get(POST_ROUTE_KEYS.ID)
+  public async getPostByID(
+    @Param('id') postId: string,
+  ) {
+    return this.postService.getPostById(postId,);
   }
 }

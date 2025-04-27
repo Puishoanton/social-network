@@ -6,7 +6,7 @@ import { MessegeResponseType, PostReturnType } from 'src/typings';
 
 @Injectable()
 export class PostService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   public async create(
     content: string,
@@ -42,7 +42,6 @@ export class PostService {
       include: prismaPostInclude,
       omit: prismaPostOmit,
     });
-
     return posts.map((post) => ({ ...post, likes: post.likes.length }));
   }
 
@@ -77,11 +76,23 @@ export class PostService {
     return { message: 'Like added' };
   }
 
-  private async findPostById(id: string): Promise<Post | null> {
+  public async findPostById(id: string): Promise<Post | null> {
     return this.prismaService.post.findUnique({
       where: {
         id,
       },
     });
+  }
+  public async getPostById(id: string): Promise<PostReturnType | null> {
+    const post = await this.prismaService.post.findUnique({
+      where: {
+        id
+      },
+      include: prismaPostInclude,
+      omit: prismaPostOmit,
+    });
+
+    const { likes, ...returnPost } = post;
+    return { ...returnPost, likes: post.likes.length };
   }
 }
