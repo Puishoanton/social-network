@@ -35,7 +35,7 @@ export class AuthController {
     return this.authService.refresh(req, res)
   }
 
-  @Post(AUTH_ROUTE_KEYS.LOGOUT)
+  @Get(AUTH_ROUTE_KEYS.LOGOUT)
   public async logout(@Res({ passthrough: true }) res: Response) {
     return this.authService.logout(res);
   }
