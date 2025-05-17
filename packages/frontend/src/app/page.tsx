@@ -1,9 +1,7 @@
-import type {
-  Metadata,
-} from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Boilerplate',
+  title: 'Social network',
 }
 
 export default function Home() {

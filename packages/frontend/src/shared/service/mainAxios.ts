@@ -13,6 +13,7 @@ type ApiErrorType = {
 }
 
 export const mainAxios = axios.create({
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
